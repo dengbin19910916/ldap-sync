@@ -1,0 +1,33 @@
+# 2018/11/23
+1. 将Java版本设置为8。
+2. 修复领域模型Department的path可能为空的bug。
+3. 简化Elasticsearch的存储逻辑。
+
+# 2018/11/10
+1. 丰富领域模型。
+2. 增加判断组织是否为空的方法。
+
+# 2018/11/1
+1. 添加Cleaner，使用异步的方式删除Elasticsearch中的无效数据。
+2. 添加Organization领域对象。
+3. 升级Spring Boot 2.1.0.RELEASE。
+4. 拉取岗位信息修改为异步方式。
+
+# 2018/10/19
+1. 使用spring-boot-starter-elasticsearch。
+2. 添加jest访问Elasticsearch。
+3. 升级Spring Boot 2.1.0.RC1。
+
+# 2018/10/7
+1. 将LdapPuller修改为LdapPorter。
+2. 适配Java 11。
+
+# 2018/9/24
+1. 使用测试驱动开发重新编码。
+2. 将标准模型中的departmentNumber修改为departmentId，更加符合定义。
+3. 适配Java 10。
+
+# 2018/9/20
+1. 添加Orika配置。
+2. 移除领域对象的JPA注解。
+3. 更新DatabasePersistence。
