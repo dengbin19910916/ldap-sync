@@ -44,7 +44,7 @@ public class DataSource {
     @Enumerated
     private PullStrategy pullStrategy;
 
-    @OneToMany(mappedBy = "dataSource", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "dataSource")
     private List<Dictionary> dictionaries;
 
     @OneToMany(mappedBy = "dataSource")

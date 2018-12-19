@@ -25,7 +25,7 @@ public class Dictionary {
     @Column(length = 2000)
     private String filter;
 
-    @OneToMany(mappedBy = "dictionary", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "dictionary")
     private List<AttributeMap> attributeMaps;
 
     @ManyToOne
