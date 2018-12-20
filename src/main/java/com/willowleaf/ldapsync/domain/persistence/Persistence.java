@@ -2,19 +2,13 @@ package com.willowleaf.ldapsync.domain.persistence;
 
 import com.willowleaf.ldapsync.data.DepartmentRepository;
 import com.willowleaf.ldapsync.data.EmployeeRepository;
-import com.willowleaf.ldapsync.domain.DataSource;
 import com.willowleaf.ldapsync.domain.Organization;
 import com.willowleaf.ldapsync.domain.model.Department;
 import lombok.SneakyThrows;
-import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
-import org.elasticsearch.action.admin.indices.get.GetIndexRequest;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-
-import static org.elasticsearch.client.RequestOptions.DEFAULT;
 
 /**
  * 将标准的组织数据持久化。
@@ -32,41 +26,6 @@ public abstract class Persistence {
     @Autowired
     protected EmployeeRepository employeeRepository;
 
-    private static final String INDEX_PREFIX_DEPT = "dept";
-    private static final String INDEX_PREFIX_EMP = "emp";
-
-    private static String getIndex(String indexPrefix, DataSource dataSource) {
-        return indexPrefix + "_" + dataSource.getId();
-    }
-
-    /**
-     * index的格式为dept_{dataSourceId}。
-     */
-    static String getDeptIndex(@Nonnull DataSource dataSource) {
-        return getIndex(INDEX_PREFIX_DEPT, dataSource);
-    }
-
-    /**
-     * index的格式为emp_{dataSourceId}。
-     */
-    static String getEmpIndex(@Nonnull DataSource dataSource) {
-        return getIndex(INDEX_PREFIX_EMP, dataSource);
-    }
-
-    private void deleteIndex(String index) throws IOException {
-        if (client.indices().exists(new GetIndexRequest().indices(index), DEFAULT)) {
-            client.indices().delete(new DeleteIndexRequest(index), DEFAULT);
-        }
-    }
-
-    private void deleteIfExists(@Nonnull Organization organization) throws IOException {
-        deleteIndex(getDeptIndex(organization.getDataSource()));
-        deleteIndex(getEmpIndex(organization.getDataSource()));
-
-        employeeRepository.deleteByDataSourceId(organization.getDataSource().getId());
-        departmentRepository.deleteByDataSourceId(organization.getDataSource().getId());
-    }
-
     /**
      * 持久化组织架构数据。
      *
@@ -77,7 +36,6 @@ public abstract class Persistence {
     @SneakyThrows
     public void save(@Nonnull Organization organization) {
         if (!organization.isEmpty()) {
-            deleteIfExists(organization);
             organization.getDepartments().parallelStream().forEach(this::save);
         }
     }

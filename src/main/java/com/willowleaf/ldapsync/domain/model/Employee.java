@@ -1,6 +1,5 @@
 package com.willowleaf.ldapsync.domain.model;
 
-import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.willowleaf.ldapsync.domain.DataSource;
 import lombok.Data;
 
@@ -139,10 +138,6 @@ public class Employee {
      */
     @ManyToOne
     private DataSource dataSource;
-
-    public Employee() {
-        this.id = IdWorker.getIdStr(); // IdWorker算法基于本机时间，不同的机器可能生成同样的ID
-    }
 
     @Override
     public boolean equals(Object o) {

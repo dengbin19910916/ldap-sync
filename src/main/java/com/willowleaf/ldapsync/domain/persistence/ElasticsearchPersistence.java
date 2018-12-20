@@ -1,11 +1,13 @@
 package com.willowleaf.ldapsync.domain.persistence;
 
+import com.willowleaf.ldapsync.domain.DataSource;
 import com.willowleaf.ldapsync.domain.model.Department;
 import com.willowleaf.ldapsync.domain.model.Employee;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,9 @@ public class ElasticsearchPersistence extends Persistence {
 
     // Elasticsearch 6.X一个index只能有一个type，7+以后会取消type，所有当前版本使用固定的type值
     private static final String TYPE = "doc";
+
+    private static final String INDEX_PREFIX_DEPT = "dept";
+    private static final String INDEX_PREFIX_EMP = "emp";
 
     @Override
     public void save(@Nonnull Department department) {
@@ -43,7 +48,7 @@ public class ElasticsearchPersistence extends Persistence {
     }
 
     private void saveDepartment(Department department) throws IOException {
-        client.index(buildRequest(getDeptIndex(department.getDataSource()), department.getNumber(), department), DEFAULT);
+        client.update(buildRequest(getDeptIndex(department.getDataSource()), department.getNumber(), department), DEFAULT);
     }
 
     private void saveEmployees(List<Employee> employees) throws IOException {
@@ -59,11 +64,32 @@ public class ElasticsearchPersistence extends Persistence {
         client.bulk(bulkRequest, DEFAULT);
     }
 
-    private IndexRequest buildRequest(String index, String id, Object model) throws IOException {
+    private static String getIndex(String indexPrefix, DataSource dataSource) {
+        return indexPrefix + "_" + dataSource.getId();
+    }
+
+    /**
+     * index的格式为dept_{dataSourceId}。
+     */
+    private static String getDeptIndex(@Nonnull DataSource dataSource) {
+        return getIndex(INDEX_PREFIX_DEPT, dataSource);
+    }
+
+    /**
+     * index的格式为emp_{dataSourceId}。
+     */
+    private static String getEmpIndex(@Nonnull DataSource dataSource) {
+        return getIndex(INDEX_PREFIX_EMP, dataSource);
+    }
+
+    private UpdateRequest buildRequest(String index, String id, Object model) throws IOException {
         XContentBuilder document = buildDocument(model);
 
-        return new IndexRequest(index, TYPE, id)
-                .source(document);
+        IndexRequest indexRequest = new IndexRequest(index, TYPE, id).source(document);
+        return new UpdateRequest(index, TYPE, id)
+                .doc(document)
+                .upsert(indexRequest);  // upsert: insert or update
+
     }
 
     private XContentBuilder buildDocument(Object object) throws IOException {
