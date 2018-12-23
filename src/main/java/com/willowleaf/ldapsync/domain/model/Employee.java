@@ -19,6 +19,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Entity
 public class Employee {
 
+    /**
+     * 员工ID。
+     */
     @Id
     @Column(length = 36)
     private String id;

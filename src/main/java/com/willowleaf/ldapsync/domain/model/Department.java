@@ -24,7 +24,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 public class Department {
 
     /**
-     * 部门ID，由IdWorker生成。
+     * 部门ID。
      */
     @Id
     @Column(length = 36)
