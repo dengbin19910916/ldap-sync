@@ -117,6 +117,7 @@ public class Department {
      *
      * @return 部门ID路径
      */
+    @SuppressWarnings("UnusedReturnValue")
     public String getIdPath() {
         if (isEmpty(idPath)) {
             idPath = getPath().stream().map(Department::getId).collect(Collectors.joining("_"));
@@ -129,7 +130,7 @@ public class Department {
      *
      * @return 部门编号路径
      */
-    @SuppressWarnings("unused")
+    @SuppressWarnings("UnusedReturnValue")
     public String getNumberPath() {
         if (isEmpty(numberPath)) {
             numberPath = getPath().stream().map(Department::getNumber).collect(Collectors.joining("_"));
@@ -142,7 +143,7 @@ public class Department {
      *
      * @return 部门名称路径
      */
-    @SuppressWarnings("unused")
+    @SuppressWarnings("UnusedReturnValue")
     public String getNamePath() {
         if (isEmpty(namePath)) {
             namePath = getPath().stream().map(Department::getName).collect(Collectors.joining("_"));
@@ -169,16 +170,6 @@ public class Department {
         Collections.reverse(departments);
         path = departments;
         return path;
-    }
-
-    /**
-     * 返回部门的员工数量。
-     *
-     * @return 员工数量
-     */
-    @SuppressWarnings("unused")
-    public int getHeadcount() {
-        return employees.size();
     }
 
     @Override
