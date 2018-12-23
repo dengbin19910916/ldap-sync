@@ -22,7 +22,7 @@ public class CompositePersistence extends Persistence {
     }
 
     @Override
-    public void save(@Nonnull Department department) {
+    public void save(@Nonnull final Department department) {
         try {
             databasePersistence.save(department);
             elasticsearchPersistence.save(department);

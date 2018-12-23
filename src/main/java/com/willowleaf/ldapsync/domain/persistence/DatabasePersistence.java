@@ -11,7 +11,7 @@ import java.util.List;
 public class DatabasePersistence extends Persistence {
 
     @Override
-    public void save(@Nonnull Department department) {
+    public void save(@Nonnull final Department department) {
         List<Employee> employees = department.getEmployees();
         department.setEmployees(null);      // Hibernate JPA 实现如此
         departmentRepository.save(department);

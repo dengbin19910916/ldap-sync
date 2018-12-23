@@ -30,7 +30,7 @@ public class ElasticsearchPersistence extends Persistence {
     private static final String INDEX_PREFIX_EMP = "emp";
 
     @Override
-    public void save(@Nonnull Department department) {
+    public void save(@Nonnull final Department department) {
         try {
             saveDepartment(department);
 
