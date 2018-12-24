@@ -8,6 +8,7 @@ import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +29,12 @@ public class ElasticsearchPersistence extends Persistence {
 
     private static final String INDEX_PREFIX_DEPT = "dept";
     private static final String INDEX_PREFIX_EMP = "emp";
+
+    private final RestHighLevelClient client;
+
+    public ElasticsearchPersistence(RestHighLevelClient client) {
+        this.client = client;
+    }
 
     @Override
     public void save(@Nonnull final Department department) {

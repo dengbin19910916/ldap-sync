@@ -1,12 +1,8 @@
 package com.willowleaf.ldapsync.domain.persistence;
 
-import com.willowleaf.ldapsync.data.DepartmentRepository;
-import com.willowleaf.ldapsync.data.EmployeeRepository;
 import com.willowleaf.ldapsync.domain.Organization;
 import com.willowleaf.ldapsync.domain.model.Department;
 import lombok.SneakyThrows;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nonnull;
 
@@ -22,13 +18,6 @@ import javax.annotation.Nonnull;
  * @see ElasticsearchPersistence
  */
 public abstract class Persistence {
-
-    @Autowired
-    protected RestHighLevelClient client;
-    @Autowired
-    protected DepartmentRepository departmentRepository;
-    @Autowired
-    protected EmployeeRepository employeeRepository;
 
     /**
      * 持久化组织架构数据。

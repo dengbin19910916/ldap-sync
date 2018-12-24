@@ -1,5 +1,7 @@
 package com.willowleaf.ldapsync.domain.persistence;
 
+import com.willowleaf.ldapsync.data.DepartmentRepository;
+import com.willowleaf.ldapsync.data.EmployeeRepository;
 import com.willowleaf.ldapsync.domain.model.Department;
 import com.willowleaf.ldapsync.domain.model.Employee;
 import org.springframework.stereotype.Component;
@@ -10,6 +12,15 @@ import java.util.List;
 @Component
 public class DatabasePersistence extends Persistence {
 
+    private final DepartmentRepository departmentRepository;
+    private final EmployeeRepository employeeRepository;
+
+    public DatabasePersistence(DepartmentRepository departmentRepository,
+                               EmployeeRepository employeeRepository) {
+        this.departmentRepository = departmentRepository;
+        this.employeeRepository = employeeRepository;
+    }
+
     @Override
     public void save(@Nonnull final Department department) {
         List<Employee> employees = department.getEmployees();
@@ -17,5 +28,10 @@ public class DatabasePersistence extends Persistence {
         departmentRepository.save(department);
         employeeRepository.saveAll(employees);
         department.setEmployees(employees);
+    }
+
+    void remove(@Nonnull final Department department) {
+        departmentRepository.delete(department);
+        employeeRepository.deleteAll(department.getEmployees());
     }
 }
