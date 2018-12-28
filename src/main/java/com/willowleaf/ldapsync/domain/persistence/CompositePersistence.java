@@ -28,7 +28,7 @@ public class CompositePersistence extends Persistence {
     public void save(@Nonnull final Department department) {
         try {
             databasePersistence.save(department);
-//            redisPersistence.save(department);
+            redisPersistence.save(department);
             elasticsearchPersistence.save(department);
         } catch (RuntimeException e) {
             databasePersistence.remove(department);
