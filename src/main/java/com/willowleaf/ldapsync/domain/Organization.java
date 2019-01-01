@@ -175,7 +175,6 @@ public class Organization {
     private void setPath() {
         departments = departments.parallelStream()
                 .peek(department -> {
-                    department.getPath();
                     department.getIdPath();
                     department.getNumberPath();
                     department.getNamePath();
