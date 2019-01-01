@@ -1,7 +1,6 @@
 package com.willowleaf.ldapsync.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.willowleaf.ldapsync.data.DictionaryRepository;
 import com.willowleaf.ldapsync.domain.factory.LdapPorterFactory;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -65,10 +64,6 @@ public class DataSource {
 
     @OneToMany(mappedBy = "dataSource")
     private List<Employee> employees;
-
-    @JsonIgnore
-    @Transient
-    private DictionaryRepository dictionaryRepository;
 
     /**
      * 数据拉取类型。
