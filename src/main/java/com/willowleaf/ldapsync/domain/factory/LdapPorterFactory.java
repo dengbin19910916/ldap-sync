@@ -1,9 +1,9 @@
 package com.willowleaf.ldapsync.domain.factory;
 
-import com.willowleaf.ldapsync.domain.LdapOperator;
+import com.willowleaf.ldapsync.domain.DataSource;
 import com.willowleaf.ldapsync.domain.LdapPorter;
-import com.willowleaf.ldapsync.domain.persistence.Persistence;
 import com.willowleaf.ldapsync.domain.persistence.CompositePersistence;
+import com.willowleaf.ldapsync.domain.persistence.Persistence;
 import com.willowleaf.ldapsync.domain.porter.CycleLdapPorter;
 import com.willowleaf.ldapsync.domain.porter.SingleLdapPorter;
 import org.springframework.stereotype.Component;
@@ -14,16 +14,15 @@ import javax.annotation.Nonnull;
  * 创建{@code LdapPorter}对象。
  *
  * @see LdapPorter
- * @see LdapOperator
  */
 @Component
 public class LdapPorterFactory {
 
-    private final LdapOperatorFactory ldapOperatorFactory;
+    private final DataSourceFactory dataSourceFactory;
     private final Persistence persistence;
 
-    public LdapPorterFactory(LdapOperatorFactory ldapOperatorFactory, CompositePersistence persistence) {
-        this.ldapOperatorFactory = ldapOperatorFactory;
+    public LdapPorterFactory(DataSourceFactory dataSourceFactory, CompositePersistence persistence) {
+        this.dataSourceFactory = dataSourceFactory;
         this.persistence = persistence;
     }
 
@@ -34,13 +33,13 @@ public class LdapPorterFactory {
      * @return LDAP搬运工
      */
     public LdapPorter getLdapPorter(@Nonnull Integer dataSourceId) {
-        LdapOperator ldapOperator = ldapOperatorFactory.getLdapOperator(dataSourceId);
+        DataSource dataSource = dataSourceFactory.getDataSource(dataSourceId);
 
-        switch (ldapOperator.getDataSource().getPullStrategy()) {
+        switch (dataSource.getPullStrategy()) {
             case SINGLE:
-                return new SingleLdapPorter(ldapOperator, persistence);
+                return new SingleLdapPorter(dataSource, persistence);
             case CYCLE:
-                return new CycleLdapPorter(ldapOperator, persistence);
+                return new CycleLdapPorter(dataSource, persistence);
             default:
                 throw new RuntimeException();   // It won't happen.
         }

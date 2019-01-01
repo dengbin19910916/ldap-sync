@@ -22,15 +22,13 @@ import static org.springframework.util.StringUtils.isEmpty;
  */
 public abstract class LdapPorter {
 
-    private LdapOperator operator;
-    protected Persistence persistence;
     @Getter
     protected DataSource dataSource;
+    protected Persistence persistence;
 
-    public LdapPorter(@Nonnull LdapOperator operator, @Nonnull Persistence persistence) {
-        this.operator = operator;
+    public LdapPorter(@Nonnull DataSource dataSource, @Nonnull Persistence persistence) {
+        this.dataSource = dataSource;
         this.persistence  = persistence;
-        this.dataSource = operator.getDataSource();
     }
 
     /**
@@ -45,7 +43,7 @@ public abstract class LdapPorter {
     }
 
     protected <T> List<T> pullElements(Dictionary dictionary, Class<T> clazz, String name, String value) {
-        return operator.search(dictionary.getBase(), andFilter(dictionary.getFilter(), name, value),
+        return dataSource.search(dictionary.getBase(), andFilter(dictionary.getFilter(), name, value),
                 dictionary.getAttributeMaps(), clazz)
                 .parallelStream()
                 .peek(element -> {

@@ -1,12 +1,9 @@
 package com.willowleaf.ldapsync.domain.porter;
 
-import com.willowleaf.ldapsync.domain.Dictionary;
-import com.willowleaf.ldapsync.domain.LdapOperator;
-import com.willowleaf.ldapsync.domain.LdapPorter;
+import com.willowleaf.ldapsync.domain.*;
 import com.willowleaf.ldapsync.domain.persistence.Persistence;
 import com.willowleaf.ldapsync.domain.model.Department;
 import com.willowleaf.ldapsync.domain.model.Employee;
-import com.willowleaf.ldapsync.domain.Organization;
 import com.willowleaf.ldapsync.domain.model.Position;
 import lombok.SneakyThrows;
 
@@ -16,8 +13,8 @@ import java.util.concurrent.FutureTask;
 
 public class CycleLdapPorter extends LdapPorter {
 
-    public CycleLdapPorter(@Nonnull LdapOperator operator, @Nonnull Persistence persistence) {
-        super(operator, persistence);
+    public CycleLdapPorter(@Nonnull DataSource dataSource, @Nonnull Persistence persistence) {
+        super(dataSource, persistence);
     }
 
     @SneakyThrows

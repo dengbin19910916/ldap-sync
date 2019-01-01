@@ -105,10 +105,18 @@ public class Organization {
     }
 
     /**
-     * 持久化数据。
+     * <pre>
+     * 持久化组织架构数据。
+     * 组织架构数据包含了所有的部门，员工和岗位信息，其中部门持有员工信息列表。
+     * </pre>
+     *
+     * @see Department 部门信息(包含部门的所有员工信息)
+     * @see Employee 员工信息（包含员工的所有岗位信息）
      */
     public void save() {
-        persistence.save(this);
+        if (!isEmpty()) {
+            getDepartments().parallelStream().forEach(persistence::save);
+        }
     }
 
     @SneakyThrows
@@ -187,7 +195,7 @@ public class Organization {
      *
      * @return true - 存在，false - 部门或员工不存在
      */
-    public boolean isEmpty() {
+    private boolean isEmpty() {
         if (empty == null) {
             empty = !(departments != null && !departments.isEmpty()
                     && departments.parallelStream().anyMatch(department -> !CollectionUtils.isEmpty(department.getEmployees())));

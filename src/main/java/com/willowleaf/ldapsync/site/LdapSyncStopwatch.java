@@ -49,18 +49,4 @@ public class LdapSyncStopwatch {
                 LocalDateTime.now().toEpochSecond(zoneOffset) - start.toEpochSecond(zoneOffset));
         return result;
     }
-
-
-    @Pointcut("execution(* com.willowleaf.ldapsync.domain.persistence.Persistence.save(com.willowleaf.ldapsync.domain.Organization))")
-    public void saveSpendTime() {
-    }
-
-    @Around("saveSpendTime()")
-    public Object saveAround(ProceedingJoinPoint joinPoint) throws Throwable {
-        long start = System.currentTimeMillis();
-        Object result = joinPoint.proceed();
-        long spendTime = System.currentTimeMillis() - start;
-        log.info("\t持久化数据耗时: {}s", spendTime / 1000);
-        return result;
-    }
 }

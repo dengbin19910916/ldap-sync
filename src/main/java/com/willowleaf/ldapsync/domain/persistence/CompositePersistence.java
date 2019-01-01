@@ -10,17 +10,14 @@ import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Component
-public class CompositePersistence extends Persistence {
+public class CompositePersistence implements Persistence {
 
     private final DatabasePersistence databasePersistence;
-    private final RedisPersistence redisPersistence;
     private final ElasticsearchPersistence elasticsearchPersistence;
 
     public CompositePersistence(DatabasePersistence databasePersistence,
-                                RedisPersistence redisPersistence,
                                 ElasticsearchPersistence elasticsearchPersistence) {
         this.databasePersistence = databasePersistence;
-        this.redisPersistence = redisPersistence;
         this.elasticsearchPersistence = elasticsearchPersistence;
     }
 
@@ -28,11 +25,9 @@ public class CompositePersistence extends Persistence {
     public void save(@Nonnull final Department department) {
         try {
             databasePersistence.save(department);
-            redisPersistence.save(department);
             elasticsearchPersistence.save(department);
         } catch (RuntimeException e) {
             databasePersistence.remove(department);
-            redisPersistence.remove(department);
 
             log.error("持久化错误! \n部门: " + department.getName()
                             + "[" + department.getId() + "], 员工数: " + department.getEmployees().size()

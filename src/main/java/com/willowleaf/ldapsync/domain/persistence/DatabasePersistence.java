@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 @Component
-public class DatabasePersistence extends Persistence {
+public class DatabasePersistence implements Persistence {
 
     private final DepartmentRepository departmentRepository;
     private final EmployeeRepository employeeRepository;
