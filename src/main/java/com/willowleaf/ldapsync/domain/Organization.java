@@ -1,9 +1,5 @@
 package com.willowleaf.ldapsync.domain;
 
-import com.willowleaf.ldapsync.domain.model.Department;
-import com.willowleaf.ldapsync.domain.model.Employee;
-import com.willowleaf.ldapsync.domain.model.Position;
-import com.willowleaf.ldapsync.domain.persistence.Persistence;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.springframework.util.CollectionUtils;
@@ -230,5 +226,27 @@ public class Organization {
         return dataSource.getName() + "组织架构信息: \n" +
                 "\t部门总数: " + departments.size() +
                 "\t员工总数: " + employees.size();
+    }
+
+    /**
+     * <pre>
+     * 将标准的组织数据持久化。
+     *
+     * 使用组合模式分离数据库持久化和Elasticsearch持久化。
+     * </pre>
+     */
+    public interface Persistence {
+
+        /**
+         * <pre>
+         * 持久化组织架构数据。
+         *
+         * 实现类不允许修改Department对象的数据。
+         * </pre>
+         *
+         * @param department 部门信息，包含部门下的所有员工信息及员工的所有岗位信息
+         * @see Department#getEmployees() 部门员工列表
+         */
+        void save(@Nonnull final Department department);
     }
 }

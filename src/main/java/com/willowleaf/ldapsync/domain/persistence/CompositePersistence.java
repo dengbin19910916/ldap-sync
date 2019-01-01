@@ -1,6 +1,7 @@
 package com.willowleaf.ldapsync.domain.persistence;
 
-import com.willowleaf.ldapsync.domain.model.Department;
+import com.willowleaf.ldapsync.domain.Department;
+import com.willowleaf.ldapsync.domain.Organization;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +11,7 @@ import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Component
-public class CompositePersistence implements Persistence {
+public class CompositePersistence implements Organization.Persistence {
 
     private final DatabasePersistence databasePersistence;
     private final ElasticsearchPersistence elasticsearchPersistence;

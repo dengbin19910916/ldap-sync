@@ -1,8 +1,9 @@
 package com.willowleaf.ldapsync.domain.persistence;
 
 import com.willowleaf.ldapsync.domain.DataSource;
-import com.willowleaf.ldapsync.domain.model.Department;
-import com.willowleaf.ldapsync.domain.model.Employee;
+import com.willowleaf.ldapsync.domain.Department;
+import com.willowleaf.ldapsync.domain.Employee;
+import com.willowleaf.ldapsync.domain.Organization;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
@@ -22,7 +23,7 @@ import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
 @Slf4j
 @Component
-public class ElasticsearchPersistence implements Persistence {
+public class ElasticsearchPersistence implements Organization.Persistence {
 
     // Elasticsearch 6.X一个index只能有一个type，7+以后会取消type，所有当前版本使用固定的type值
     private static final String TYPE = "doc";

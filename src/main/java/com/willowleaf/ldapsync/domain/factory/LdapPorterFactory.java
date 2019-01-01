@@ -2,8 +2,8 @@ package com.willowleaf.ldapsync.domain.factory;
 
 import com.willowleaf.ldapsync.domain.DataSource;
 import com.willowleaf.ldapsync.domain.LdapPorter;
+import com.willowleaf.ldapsync.domain.Organization;
 import com.willowleaf.ldapsync.domain.persistence.CompositePersistence;
-import com.willowleaf.ldapsync.domain.persistence.Persistence;
 import com.willowleaf.ldapsync.domain.porter.CycleLdapPorter;
 import com.willowleaf.ldapsync.domain.porter.SingleLdapPorter;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 public class LdapPorterFactory {
 
     private final DataSourceFactory dataSourceFactory;
-    private final Persistence persistence;
+    private final Organization.Persistence persistence;
 
     public LdapPorterFactory(DataSourceFactory dataSourceFactory, CompositePersistence persistence) {
         this.dataSourceFactory = dataSourceFactory;

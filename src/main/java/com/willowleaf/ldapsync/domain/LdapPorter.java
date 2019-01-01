@@ -1,9 +1,5 @@
 package com.willowleaf.ldapsync.domain;
 
-import com.willowleaf.ldapsync.domain.model.Department;
-import com.willowleaf.ldapsync.domain.model.Employee;
-import com.willowleaf.ldapsync.domain.model.Position;
-import com.willowleaf.ldapsync.domain.persistence.Persistence;
 import lombok.Getter;
 
 import javax.annotation.Nonnull;
@@ -24,9 +20,9 @@ public abstract class LdapPorter {
 
     @Getter
     protected DataSource dataSource;
-    protected Persistence persistence;
+    protected Organization.Persistence persistence;
 
-    public LdapPorter(@Nonnull DataSource dataSource, @Nonnull Persistence persistence) {
+    public LdapPorter(@Nonnull DataSource dataSource, @Nonnull Organization.Persistence persistence) {
         this.dataSource = dataSource;
         this.persistence  = persistence;
     }

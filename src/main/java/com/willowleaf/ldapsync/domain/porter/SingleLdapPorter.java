@@ -4,10 +4,9 @@ import com.willowleaf.ldapsync.domain.DataSource;
 import com.willowleaf.ldapsync.domain.Dictionary;
 import com.willowleaf.ldapsync.domain.LdapPorter;
 import com.willowleaf.ldapsync.domain.Organization;
-import com.willowleaf.ldapsync.domain.model.Department;
-import com.willowleaf.ldapsync.domain.model.Employee;
-import com.willowleaf.ldapsync.domain.model.Position;
-import com.willowleaf.ldapsync.domain.persistence.Persistence;
+import com.willowleaf.ldapsync.domain.Department;
+import com.willowleaf.ldapsync.domain.Employee;
+import com.willowleaf.ldapsync.domain.Position;
 import lombok.SneakyThrows;
 
 import javax.annotation.Nonnull;
@@ -16,7 +15,7 @@ import java.util.concurrent.FutureTask;
 
 public class SingleLdapPorter extends LdapPorter {
 
-    public SingleLdapPorter(@Nonnull DataSource dataSource, @Nonnull Persistence persistence) {
+    public SingleLdapPorter(@Nonnull DataSource dataSource, @Nonnull Organization.Persistence persistence) {
         super(dataSource, persistence);
     }
 

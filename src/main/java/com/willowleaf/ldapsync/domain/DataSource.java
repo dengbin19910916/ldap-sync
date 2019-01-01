@@ -3,8 +3,6 @@ package com.willowleaf.ldapsync.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.willowleaf.ldapsync.data.DictionaryRepository;
 import com.willowleaf.ldapsync.domain.factory.LdapPorterFactory;
-import com.willowleaf.ldapsync.domain.model.Department;
-import com.willowleaf.ldapsync.domain.model.Employee;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;

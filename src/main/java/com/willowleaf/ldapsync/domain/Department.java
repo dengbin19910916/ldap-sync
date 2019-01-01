@@ -1,7 +1,6 @@
-package com.willowleaf.ldapsync.domain.model;
+package com.willowleaf.ldapsync.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.willowleaf.ldapsync.domain.DataSource;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -117,7 +116,7 @@ public class Department {
      *
      * @return 部门ID路径
      */
-    @SuppressWarnings("UnusedReturnValue")
+    @SuppressWarnings({"UnusedReturnValue", "WeakerAccess"})
     public String getIdPath() {
         if (isEmpty(idPath)) {
             idPath = getPath().stream().map(Department::getId).collect(Collectors.joining("_"));
@@ -130,7 +129,7 @@ public class Department {
      *
      * @return 部门编号路径
      */
-    @SuppressWarnings("UnusedReturnValue")
+    @SuppressWarnings({"UnusedReturnValue", "WeakerAccess"})
     public String getNumberPath() {
         if (isEmpty(numberPath)) {
             numberPath = getPath().stream().map(Department::getNumber).collect(Collectors.joining("_"));
@@ -143,7 +142,7 @@ public class Department {
      *
      * @return 部门名称路径
      */
-    @SuppressWarnings("UnusedReturnValue")
+    @SuppressWarnings({"UnusedReturnValue", "WeakerAccess"})
     public String getNamePath() {
         if (isEmpty(namePath)) {
             namePath = getPath().stream().map(Department::getName).collect(Collectors.joining("_"));
@@ -159,6 +158,7 @@ public class Department {
      *
      * @return 当前部门的路径
      */
+    @SuppressWarnings("WeakerAccess")
     public List<Department> getPath() {
         List<Department> departments = new ArrayList<>();
         Department dept = this;

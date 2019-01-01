@@ -1,6 +1,5 @@
-package com.willowleaf.ldapsync.domain.model;
+package com.willowleaf.ldapsync.domain;
 
-import com.willowleaf.ldapsync.domain.DataSource;
 import lombok.Data;
 
 import java.util.List;
