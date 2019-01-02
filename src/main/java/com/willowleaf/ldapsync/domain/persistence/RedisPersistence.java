@@ -1,5 +1,6 @@
 package com.willowleaf.ldapsync.domain.persistence;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.willowleaf.ldapsync.domain.model.Department;
 import com.willowleaf.ldapsync.domain.model.Employee;
 import lombok.SneakyThrows;
@@ -16,21 +17,25 @@ import java.util.Map;
 public class RedisPersistence extends Persistence {
 
     private final RedisOperations<Object, Object> redisOperations;
+    private final ObjectMapper objectMapper;
 
-    public RedisPersistence(RedisOperations<Object, Object> redisOperations) {
+    public RedisPersistence(RedisOperations<Object, Object> redisOperations, ObjectMapper objectMapper) {
         this.redisOperations = redisOperations;
+        this.objectMapper = objectMapper;
     }
 
     @SneakyThrows
     @Override
     public void save(@Nonnull final Department department) {
-        redisOperations.opsForValue().set(getDeptKey(department.getId()), department);
+        redisOperations.opsForValue().set(getDeptKey(department.getId()), objectMapper.writeValueAsString(department));
 
-        Map<String, Employee> employees = new HashMap<>(department.getEmployees().size());
-        for (Employee employee : department.getEmployees()) {
-            employees.put(getEmpKey(employee.getId()), employee);
+        if (!department.getEmployees().isEmpty()) {
+            Map<String, String> employees = new HashMap<>(department.getEmployees().size());
+            for (Employee employee : department.getEmployees()) {
+                employees.put(getEmpKey(employee.getId()), objectMapper.writeValueAsString(employee));
+            }
+            redisOperations.opsForValue().multiSet(employees);
         }
-        redisOperations.opsForValue().multiSet(employees);
     }
 
     void remove(Department department) {

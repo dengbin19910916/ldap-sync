@@ -1,5 +1,6 @@
 package com.willowleaf.ldapsync.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.willowleaf.ldapsync.domain.DataSource;
 import lombok.Data;
 
@@ -130,16 +131,19 @@ public class Employee {
      * 员工所属部门。
      */
     @ManyToOne
+    @JsonIgnore
     private Department department;
     /**
      * 员工的岗位列表。
      */
     @Transient
+    @JsonIgnore
     private List<Position> positions = new CopyOnWriteArrayList<>();
     /**
      * 数据源。
      */
     @ManyToOne
+    @JsonIgnore
     private DataSource dataSource;
 
     @Override

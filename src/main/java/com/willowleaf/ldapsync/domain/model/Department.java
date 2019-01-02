@@ -104,11 +104,13 @@ public class Department {
     /**
      * 员工列表。
      */
+    @JsonIgnore
     @OneToMany(mappedBy = "department")
     private List<Employee> employees = new CopyOnWriteArrayList<>();
     /**
      * 数据源。
      */
+    @JsonIgnore
     @ManyToOne
     private DataSource dataSource;
 
@@ -159,6 +161,8 @@ public class Department {
      *
      * @return 当前部门的路径
      */
+    @SuppressWarnings("WeakerAccess")
+    @JsonIgnore
     public List<Department> getPath() {
         List<Department> departments = new ArrayList<>();
         Department dept = this;
