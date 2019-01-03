@@ -248,5 +248,13 @@ public class Organization {
          * @see Department#getEmployees() 部门员工列表
          */
         void save(@Nonnull final Department department);
+
+        /**
+         * 移除组织架构数据。
+         *
+         * @param department 部门信息，包含部门下的所有员工信息及员工的所有岗位信息
+         * @param e          异常信息
+         */
+        void remove(@Nonnull final Department department, Exception e);
     }
 }

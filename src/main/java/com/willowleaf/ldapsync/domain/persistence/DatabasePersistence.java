@@ -31,7 +31,8 @@ public class DatabasePersistence implements Organization.Persistence {
         department.setEmployees(employees);
     }
 
-    void remove(@Nonnull final Department department) {
+    @Override
+    public void remove(@Nonnull final Department department, Exception e) {
         departmentRepository.delete(department);
         employeeRepository.deleteAll(department.getEmployees());
     }

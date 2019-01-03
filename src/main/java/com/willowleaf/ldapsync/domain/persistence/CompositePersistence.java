@@ -28,14 +28,20 @@ public class CompositePersistence implements Organization.Persistence {
             databasePersistence.save(department);
             elasticsearchPersistence.save(department);
         } catch (RuntimeException e) {
-            databasePersistence.remove(department);
-
-            log.error("持久化错误! \n部门: " + department.getName()
-                            + "[" + department.getId() + "], 员工数: " + department.getEmployees().size()
-                            + ", \n员工列表: " + department.getEmployees().stream()
-                            .map(employee -> employee.getName() + "[" + employee.getId() + "]").collect(toList()),
-                    e);
+            remove(department, e);
             throw e;
         }
+    }
+
+    @Override
+    public void remove(@Nonnull Department department, Exception e) {
+        databasePersistence.remove(department, e);
+        elasticsearchPersistence.remove(department, e);
+
+        log.error("持久化错误! \n部门: " + department.getName()
+                        + "[" + department.getId() + "], 员工数: " + department.getEmployees().size()
+                        + ", \n员工列表: " + department.getEmployees().stream()
+                        .map(employee -> employee.getName() + "[" + employee.getId() + "]").collect(toList()),
+                e);
     }
 }

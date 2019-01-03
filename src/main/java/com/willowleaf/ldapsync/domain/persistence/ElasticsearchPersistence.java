@@ -4,6 +4,7 @@ import com.willowleaf.ldapsync.domain.DataSource;
 import com.willowleaf.ldapsync.domain.Department;
 import com.willowleaf.ldapsync.domain.Employee;
 import com.willowleaf.ldapsync.domain.Organization;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
@@ -37,22 +38,23 @@ public class ElasticsearchPersistence implements Organization.Persistence {
         this.client = client;
     }
 
+    @SneakyThrows
     @Override
     public void save(@Nonnull final Department department) {
-        try {
-            saveDepartment(department);
+        saveDepartment(department);
+        saveEmployees(department.getEmployees());
+    }
 
-            try {
-                saveEmployees(department.getEmployees());
-            } catch (IOException e) {
-                log.error("Elasticsearch保存员工信息失败", e);
-                client.delete(new DeleteRequest(getDeptIndex(department.getDataSource()), TYPE, department.getNumber()), DEFAULT);
-                throw e;
-            }
-        } catch (IOException e) {
-            log.error("Elasticsearch保存部门信息失败", e);
-            throw new RuntimeException(e);
+    @SneakyThrows
+    @Override
+    public void remove(@Nonnull Department department, Exception e) {
+        client.delete(new DeleteRequest(getDeptIndex(department.getDataSource()), TYPE, department.getNumber()), DEFAULT);
+        BulkRequest bulkRequest = new BulkRequest();
+        for (Employee employee : department.getEmployees()) {
+            DeleteRequest deleteRequest = new DeleteRequest(getEmpIndex(employee.getDataSource()), TYPE, employee.getUid());
+            bulkRequest.add(deleteRequest);
         }
+        client.bulk(bulkRequest, DEFAULT);
     }
 
     private void saveDepartment(Department department) throws IOException {
