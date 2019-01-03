@@ -107,7 +107,7 @@ public class Organization {
      * </pre>
      *
      * @see Department 部门信息(包含部门的所有员工信息)
-     * @see Employee 员工信息（包含员工的所有岗位信息）
+     * @see Employee 员工信息(包含员工的所有岗位信息）
      */
     public void save() {
         if (!isEmpty()) {
