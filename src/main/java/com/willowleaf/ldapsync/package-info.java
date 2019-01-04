@@ -9,6 +9,6 @@
  *
  * @see com.willowleaf.ldapsync.domain.DataSource
  * @see com.willowleaf.ldapsync.domain.LdapPorter
- * @see com.willowleaf.ldapsync.domain.persistence.Persistence
+ * @see com.willowleaf.ldapsync.domain.Organization
  */
 package com.willowleaf.ldapsync;
