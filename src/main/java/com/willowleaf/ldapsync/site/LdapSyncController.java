@@ -36,7 +36,7 @@ public class LdapSyncController {
     @SneakyThrows
     @GetMapping("/sync/{dataSourceId:\\d+}")
     public Integer syncData(@PathVariable Integer dataSourceId) {
-        InterProcessLock lock = new InterProcessMutex(client, "/muc/lock/ldapsync/" + dataSourceId);
+        InterProcessLock lock = new InterProcessMutex(client, "/lock/ldap/sync/" + dataSourceId);
         if (lock.acquire(0, TimeUnit.SECONDS)) {
             try {
                 ldapSyncService.syncData(dataSourceId);

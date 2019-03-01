@@ -10,11 +10,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableConfigurationProperties(ZookeeperProperties.class)
-public class ZookeeperAutoConfiguration {
+public class CuratorAutoConfiguration {
 
     private final ZookeeperProperties zookeeperProperties;
 
-    public ZookeeperAutoConfiguration(ZookeeperProperties zookeeperProperties) {
+    public CuratorAutoConfiguration(ZookeeperProperties zookeeperProperties) {
         this.zookeeperProperties = zookeeperProperties;
     }
 
