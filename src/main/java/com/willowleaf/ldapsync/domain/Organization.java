@@ -3,6 +3,7 @@ package com.willowleaf.ldapsync.domain;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.springframework.util.CollectionUtils;
+import reactor.core.publisher.Flux;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -117,29 +118,31 @@ public class Organization {
 
     @SneakyThrows
     private void init() {
-        Thread buildDepartmentTreeTask = new Thread(this::buildDepartmentTree);
-        buildDepartmentTreeTask.start();
+        buildDepartmentTree();
 
         Thread calcRelationTask = new Thread(this::calcRelation);
         calcRelationTask.start();
-
-        buildDepartmentTreeTask.join();
-        setPath();
         calcRelationTask.join();
     }
 
     private void buildDepartmentTree() {
         Map<String, Department> departmentMap = getDepartmentMap();
-        departments.parallelStream().forEach(department -> {
-            String departmentParentNumber = department.getParentNumber();
-            if (departmentParentNumber != null) {
-                Department parent = departmentMap.get(departmentParentNumber);
-                if (parent != null) {
-                    department.setParent(parent);
-                    parent.getChildren().add(department);
-                }
-            }
-        });
+
+        Flux<Department> flux = Flux.fromIterable(departments);
+        flux.subscribe(department -> {
+                    String departmentParentNumber = department.getParentNumber();
+                    if (departmentParentNumber != null) {
+                        Department parent = departmentMap.get(departmentParentNumber);
+                        if (parent != null) {
+                            department.setParent(parent);
+                            parent.getChildren().add(department);
+                        }
+                    }
+                },
+                error -> {
+                    throw new RuntimeException("部门树节点生产失败");
+                },
+                this::setPath);
     }
 
     /**
