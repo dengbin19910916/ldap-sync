@@ -9,7 +9,6 @@ import javax.annotation.Nonnull;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
@@ -29,7 +28,6 @@ public class DataSourceFactory {
         dataSource.getDictionary(Dictionary.Type.EMPLOYEE).getAttributeMaps()
                 .stream()
                 .filter(attributeMap -> !isEmpty(attributeMap.getPattern()))
-                .collect(Collectors.toList())
                 .forEach(attributeMap ->
                         fieldFormatters.put(
                                 attributeMap.getSourceName(),
