@@ -10,6 +10,13 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.concurrent.FutureTask;
 
+/**
+ * <pre>
+ * 循环调用接口拉取LDAP数据。
+ *
+ * 根据部门信息拉取部门下的所有员工信息。
+ * </pre>
+ */
 public class CycleLdapPorter extends LdapPorter {
 
     public CycleLdapPorter(@Nonnull DataSource dataSource, @Nonnull Organization.Persistence persistence) {

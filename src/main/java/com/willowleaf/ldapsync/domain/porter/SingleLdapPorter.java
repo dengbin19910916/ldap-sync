@@ -13,6 +13,9 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.concurrent.FutureTask;
 
+/**
+ * 一次拉取出所有的数据，在内存中进行关系处理。
+ */
 public class SingleLdapPorter extends LdapPorter {
 
     public SingleLdapPorter(@Nonnull DataSource dataSource, @Nonnull Organization.Persistence persistence) {

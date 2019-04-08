@@ -108,7 +108,7 @@ public class ElasticsearchPersistence implements Organization.Persistence {
         Class clazz = object.getClass();
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
-            if (needful(field)) {
+            if (isPersisted(field)) {
                 field.setAccessible(true);
                 try {
                     builder.field(field.getName(), field.get(object));
@@ -128,7 +128,7 @@ public class ElasticsearchPersistence implements Organization.Persistence {
      * @param field 数据对象的字段
      * @return 需要持久化字段的类型
      */
-    private boolean needful(Field field) {
+    private boolean isPersisted(Field field) {
         Class<?> type = field.getType();
         return type == String.class
                 || type == Integer.class
