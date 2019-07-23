@@ -25,7 +25,7 @@ public class DatabasePersistence implements Organization.Persistence {
     @Override
     public void save(@Nonnull final Department department) {
         List<Employee> employees = department.getEmployees();
-        department.setEmployees(null);      // Hibernate JPA 实现如此
+        department.setEmployees(null);      // 没有配置CascadeType
         departmentRepository.save(department);
         employeeRepository.saveAll(employees);
         department.setEmployees(employees);
