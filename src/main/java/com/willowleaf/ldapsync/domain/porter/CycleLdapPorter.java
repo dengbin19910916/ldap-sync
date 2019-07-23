@@ -19,8 +19,8 @@ import java.util.concurrent.FutureTask;
  */
 public class CycleLdapPorter extends LdapPorter {
 
-    public CycleLdapPorter(@Nonnull DataSource dataSource, @Nonnull Organization.Persistence persistence) {
-        super(dataSource, persistence);
+    public CycleLdapPorter(@Nonnull DataSource dataSource, @Nonnull Organization.Storage storage) {
+        super(dataSource, storage);
     }
 
     @SneakyThrows
@@ -48,7 +48,7 @@ public class CycleLdapPorter extends LdapPorter {
 
         // 4. 获取员工的岗位信息
         List<Position> positions = positionTask.get();
-        return new Organization(dataSource, departments, positions, persistence);
+        return new Organization(dataSource, departments, positions, storage);
     }
 
 }

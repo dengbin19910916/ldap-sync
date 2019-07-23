@@ -55,7 +55,7 @@ public class Organization {
      */
     private Boolean empty;
 
-    private Persistence persistence;
+    private Storage storage;
 
     /**
      * 创建组织架构。
@@ -67,7 +67,7 @@ public class Organization {
     public Organization(@Nonnull DataSource dataSource,
                         @Nonnull List<Department> departments,
                         @Nonnull List<Position> positions,
-                        @Nonnull Persistence persistence) {
+                        @Nonnull Storage storage) {
         this(
                 dataSource,
                 departments,
@@ -75,7 +75,7 @@ public class Organization {
                         .flatMap(department -> department.getEmployees().parallelStream())
                         .collect(Collectors.toList()),
                 positions,
-                persistence
+                storage
         );
     }
 
@@ -91,12 +91,12 @@ public class Organization {
                         @Nonnull List<Department> departments,
                         @Nonnull List<Employee> employees,
                         @Nonnull List<Position> positions,
-                        @Nonnull Persistence persistence) {
+                        @Nonnull Storage storage) {
         this.dataSource = dataSource;
         this.departments = departments;
         this.employees = employees;
         this.positions = positions;
-        this.persistence = persistence;
+        this.storage = storage;
 
         init();
     }
@@ -112,7 +112,7 @@ public class Organization {
      */
     public void save() {
         if (!isEmpty()) {
-            getDepartments().parallelStream().forEach(persistence::save);
+            getDepartments().parallelStream().forEach(storage::save);
         }
     }
 
@@ -238,7 +238,7 @@ public class Organization {
      * 使用组合模式分离数据库持久化和Elasticsearch持久化。
      * </pre>
      */
-    public interface Persistence {
+    public interface Storage {
 
         /**
          * <pre>

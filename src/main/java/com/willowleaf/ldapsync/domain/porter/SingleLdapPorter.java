@@ -18,8 +18,8 @@ import java.util.concurrent.FutureTask;
  */
 public class SingleLdapPorter extends LdapPorter {
 
-    public SingleLdapPorter(@Nonnull DataSource dataSource, @Nonnull Organization.Persistence persistence) {
-        super(dataSource, persistence);
+    public SingleLdapPorter(@Nonnull DataSource dataSource, @Nonnull Organization.Storage storage) {
+        super(dataSource, storage);
     }
 
     @SneakyThrows
@@ -38,7 +38,7 @@ public class SingleLdapPorter extends LdapPorter {
         List<Position> positions = pullElements(dataSource.getDictionary(Dictionary.Type.POSITION), Position.class);
 
         // 4. 构造组织信息
-        return new Organization(dataSource, getDepartmentsTask.get(), getEmployeesTask.get(), positions, persistence);
+        return new Organization(dataSource, getDepartmentsTask.get(), getEmployeesTask.get(), positions, storage);
     }
 
 }

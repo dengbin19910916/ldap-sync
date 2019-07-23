@@ -24,7 +24,7 @@ import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
 @Slf4j
 @Component
-public class ElasticsearchPersistence implements Organization.Persistence {
+public class ElasticsearchStorage implements Organization.Storage {
 
     // Elasticsearch 6.X一个index只能有一个type，7+以后会取消type，所有当前版本使用固定的type值
     private static final String TYPE = "doc";
@@ -34,7 +34,7 @@ public class ElasticsearchPersistence implements Organization.Persistence {
 
     private final RestHighLevelClient client;
 
-    public ElasticsearchPersistence(RestHighLevelClient client) {
+    public ElasticsearchStorage(RestHighLevelClient client) {
         this.client = client;
     }
 

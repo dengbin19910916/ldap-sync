@@ -20,11 +20,11 @@ public abstract class LdapPorter {
 
     @Getter
     protected DataSource dataSource;
-    protected Organization.Persistence persistence;
+    protected Organization.Storage storage;
 
-    public LdapPorter(@Nonnull DataSource dataSource, @Nonnull Organization.Persistence persistence) {
+    public LdapPorter(@Nonnull DataSource dataSource, @Nonnull Organization.Storage storage) {
         this.dataSource = dataSource;
-        this.persistence  = persistence;
+        this.storage = storage;
     }
 
     /**

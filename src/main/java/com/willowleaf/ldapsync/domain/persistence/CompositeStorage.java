@@ -11,13 +11,13 @@ import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Component
-public class CompositePersistence implements Organization.Persistence {
+public class CompositeStorage implements Organization.Storage {
 
-    private final DatabasePersistence databasePersistence;
-    private final ElasticsearchPersistence elasticsearchPersistence;
+    private final DatabaseStorage databasePersistence;
+    private final ElasticsearchStorage elasticsearchPersistence;
 
-    public CompositePersistence(DatabasePersistence databasePersistence,
-                                ElasticsearchPersistence elasticsearchPersistence) {
+    public CompositeStorage(DatabaseStorage databasePersistence,
+                            ElasticsearchStorage elasticsearchPersistence) {
         this.databasePersistence = databasePersistence;
         this.elasticsearchPersistence = elasticsearchPersistence;
     }

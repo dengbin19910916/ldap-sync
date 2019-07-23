@@ -11,13 +11,13 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 @Component
-public class DatabasePersistence implements Organization.Persistence {
+public class DatabaseStorage implements Organization.Storage {
 
     private final DepartmentRepository departmentRepository;
     private final EmployeeRepository employeeRepository;
 
-    public DatabasePersistence(DepartmentRepository departmentRepository,
-                               EmployeeRepository employeeRepository) {
+    public DatabaseStorage(DepartmentRepository departmentRepository,
+                           EmployeeRepository employeeRepository) {
         this.departmentRepository = departmentRepository;
         this.employeeRepository = employeeRepository;
     }
