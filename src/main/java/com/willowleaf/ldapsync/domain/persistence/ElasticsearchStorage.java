@@ -99,7 +99,6 @@ public class ElasticsearchStorage implements Organization.Storage {
         return new UpdateRequest(index, TYPE, id)
                 .doc(document)
                 .upsert(indexRequest);  // upsert: insert or update
-
     }
 
     private XContentBuilder buildDocument(Object object) throws IOException {
