@@ -55,8 +55,6 @@ public abstract class LdapPorter {
      * 返回一个完整的LDAP查询语句，使用 & 连接已有的filter和name=value。
      */
     private String andFilter(@Nonnull String filter, String name, String value) {
-        return !isEmpty(name) && !isEmpty(value) ?
-                "(&".concat(filter).concat("(").concat(name).concat("=").concat(value).concat("))")
-                : filter;
+        return isEmpty(name) || isEmpty(value) ? filter : "(&" + filter + "(" + name + "=" + value + "))";
     }
 }
