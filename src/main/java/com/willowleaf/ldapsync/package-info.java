@@ -4,7 +4,7 @@
  *
  * DataSource   LDAP数据源抽象
  * LdapPorter   负责拉取数据
- * Storage      持久化数据模型
+ * Organization 数据模型
  * </pre>
  *
  * @see com.willowleaf.ldapsync.domain.DataSource

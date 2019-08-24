@@ -41,3 +41,7 @@
 	```cmd
 	java [-Dspring.profiles.active=dev] -jar ldap-sync-0.0.1-SNAPSHOT.jar
 	```
+
+4. 未来
+
+    将使用Project Reactor重构拉取服务。
