@@ -82,6 +82,7 @@ public class DataSource {
 
     /**
      * <pre>
+     * 日期字段具有多种日期格式。
      * key - Pattern String, value - DateTimeFormatter[].
      * example: midea-birthday : DateTimeFormatter[]
      *
@@ -93,7 +94,7 @@ public class DataSource {
      */
     @JsonIgnore
     @Transient
-    private Map<String, DateTimeFormatter[]> fieldFormatters;
+    private Map<String, DateTimeFormatter[]> dateTimeFormatters;
 
     /**
      * 返回数据列表。
@@ -114,25 +115,31 @@ public class DataSource {
                     T model;
                     try {
                         model = clazz.getDeclaredConstructor().newInstance();
-                    } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                    } catch (InstantiationException | IllegalAccessException
+                            | NoSuchMethodException | InvocationTargetException e) {
                         throw new RuntimeException(e);  // It won't happen.
                     }
                     BeanWrapper beanWrapper = new BeanWrapperImpl(model);
-                    attributeMaps.parallelStream().forEach(attributeMap ->
-                            beanWrapper.setPropertyValue(
-                                    attributeMap.getTargetName(),
-                                    getValue(attributes, attributeMap.getSourceName())
-                            ));
+                    for (AttributeMap attributeMap : attributeMaps) {
+                        beanWrapper.setPropertyValue(
+                                attributeMap.getTargetName(),
+                                getValue(attributes, attributeMap.getSourceName())
+                        );
+                    }
                     return model;   // Never be null.
                 });
     }
 
     @SneakyThrows
     private Object getValue(Attributes attributes, String sourceName) {
-        Object value = attributes.get(sourceName) == null ? null : attributes.get(sourceName).get();
+        if (attributes.get(sourceName) == null
+                || attributes.get(sourceName).get() == null) {
+            return null;
+        }
 
-        if (value != null && fieldFormatters.containsKey(sourceName)) {  // 需要处理日期格式的字段
-            DateTimeFormatter[] formatters = fieldFormatters.get(sourceName);
+        Object value = attributes.get(sourceName).get();
+        if (dateTimeFormatters.containsKey(sourceName)) {   // 需要处理日期格式的字段
+            DateTimeFormatter[] formatters = dateTimeFormatters.get(sourceName);
             for (int i = 0; i < formatters.length; i++) {
                 try {
                     value = LocalDateTime.parse(value.toString(), formatters[i]);

@@ -36,7 +36,7 @@ public class DataSourceFactory {
                                         .toArray(DateTimeFormatter[]::new)
                         )
                 );
-        dataSource.setFieldFormatters(fieldFormatters);
+        dataSource.setDateTimeFormatters(fieldFormatters);
         return dataSource;
     }
 }

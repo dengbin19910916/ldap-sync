@@ -19,9 +19,14 @@ public class Dictionary {
     @Enumerated
     private Type type;
 
+    /**
+     * LDAP base信息。
+     */
     @Column(length = 2000)
     private String base;
-
+    /**
+     * LDAP filter信息。
+     */
     @Column(length = 2000)
     private String filter;
 

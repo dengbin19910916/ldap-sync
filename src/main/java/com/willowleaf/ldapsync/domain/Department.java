@@ -5,12 +5,12 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 
+import static java.util.Collections.reverse;
+import static java.util.stream.Collectors.joining;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 /**
@@ -49,7 +49,7 @@ public class Department {
      */
     @JsonIgnore
     @Transient
-    private List<Department> path = new CopyOnWriteArrayList<>();
+    private List<Department> path;
     /**
      * 部门编号（必须），例如：30003397（LDAP的唯一标识）。
      */
@@ -103,7 +103,7 @@ public class Department {
     /**
      * 员工列表。
      */
-    @OneToMany(mappedBy = "department")
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
     private List<Employee> employees = new CopyOnWriteArrayList<>();
     /**
      * 数据源。
@@ -119,7 +119,9 @@ public class Department {
     @SuppressWarnings({"UnusedReturnValue", "WeakerAccess"})
     public String getIdPath() {
         if (isEmpty(idPath)) {
-            idPath = getPath().stream().map(Department::getId).collect(Collectors.joining("_"));
+            idPath = getPath().stream()
+                    .map(Department::getId)
+                    .collect(joining("_"));
         }
         return idPath;
     }
@@ -132,7 +134,9 @@ public class Department {
     @SuppressWarnings({"UnusedReturnValue", "WeakerAccess"})
     public String getNumberPath() {
         if (isEmpty(numberPath)) {
-            numberPath = getPath().stream().map(Department::getNumber).collect(Collectors.joining("_"));
+            numberPath = getPath().stream()
+                    .map(Department::getNumber)
+                    .collect(joining("_"));
         }
         return numberPath;
     }
@@ -145,7 +149,9 @@ public class Department {
     @SuppressWarnings({"UnusedReturnValue", "WeakerAccess"})
     public String getNamePath() {
         if (isEmpty(namePath)) {
-            namePath = getPath().stream().map(Department::getName).collect(Collectors.joining("_"));
+            namePath = getPath().stream()
+                    .map(Department::getName)
+                    .collect(joining("_"));
         }
         return namePath;
     }
@@ -153,13 +159,17 @@ public class Department {
     /**
      * <pre>
      * 返回当前部门的路径（一个从根部门对象到当前部门对象所组成的链路）。
-     * 在此方法被调用之前{@code Organization#buildDepartmentTree(List)}方法至少被调用过一次。
+     * 在此方法被调用之前{@code Organization#buildDepartmentTree }方法至少被调用过一次。
      * </pre>
      *
      * @return 当前部门的路径
      */
     @SuppressWarnings("WeakerAccess")
     public List<Department> getPath() {
+        if (path != null) {
+            return path;
+        }
+
         List<Department> departments = new ArrayList<>();
         Department dept = this;
         departments.add(dept);
@@ -167,7 +177,7 @@ public class Department {
             dept = dept.parent;
             departments.add(dept);
         }
-        Collections.reverse(departments);
+        reverse(departments);
         path = departments;
         return path;
     }
