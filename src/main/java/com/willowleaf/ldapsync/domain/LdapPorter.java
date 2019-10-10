@@ -45,8 +45,8 @@ public abstract class LdapPorter {
         return getElements(
                 dataSource.search(dictionary.getBase(), dictionary.getFilter(),
                         dictionary.getAttributeMaps(), clazz)
-                        .parallelStream()
-        );
+                        .parallelStream(),
+                clazz);
     }
 
     /**
@@ -59,8 +59,8 @@ public abstract class LdapPorter {
         return getElements(
                 dataSource.search(dictionary.getBase(), andFilter(dictionary.getFilter(), name, value),
                         dictionary.getAttributeMaps(), employeeClass)
-                        .stream()
-        );
+                        .stream(),
+                employeeClass);
     }
 
     /**
@@ -70,11 +70,11 @@ public abstract class LdapPorter {
         return "(&" + filter + "(" + name + "=" + value + "))";
     }
 
-    private <T> List<T> getElements(Stream<T> stream) {
+    private <T> List<T> getElements(Stream<T> stream, Class<?> clazz) {
         return stream
                 .peek(element -> {
                     try {
-                        Employee.class.getDeclaredMethod("setDataSource", DataSource.class)
+                        clazz.getDeclaredMethod("setDataSource", DataSource.class)
                                 .invoke(element, dataSource);
                     } catch (IllegalAccessException
                             | InvocationTargetException
