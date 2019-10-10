@@ -1,9 +1,6 @@
 package com.willowleaf.ldapsync.domain.porter;
 
 import com.willowleaf.ldapsync.domain.*;
-import com.willowleaf.ldapsync.domain.Department;
-import com.willowleaf.ldapsync.domain.Employee;
-import com.willowleaf.ldapsync.domain.Position;
 import lombok.SneakyThrows;
 
 import javax.annotation.Nonnull;
