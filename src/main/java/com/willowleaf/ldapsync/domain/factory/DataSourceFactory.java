@@ -23,7 +23,8 @@ public class DataSourceFactory {
     }
 
     DataSource getDataSource(@Nonnull Integer dataSourceId) {
-        DataSource dataSource = dataSourceRepository.findById(dataSourceId).orElseThrow(() -> new IllegalArgumentException("无效数据源ID"));
+        DataSource dataSource = dataSourceRepository.findById(dataSourceId)
+                .orElseThrow(() -> new IllegalArgumentException("无效数据源ID"));
         Map<String, DateTimeFormatter[]> fieldFormatters = new HashMap<>();
         dataSource.getDictionary(Dictionary.Type.EMPLOYEE).getAttributeMaps()
                 .stream()

@@ -13,20 +13,20 @@ import static java.util.stream.Collectors.toList;
 @Component
 public class CompositeStorage implements Organization.Storage {
 
-    private final DatabaseStorage databasePersistence;
-    private final ElasticsearchStorage elasticsearchPersistence;
+    private final DatabaseStorage databaseStorage;
+    private final ElasticsearchStorage elasticsearchStorage;
 
-    public CompositeStorage(DatabaseStorage databasePersistence,
-                            ElasticsearchStorage elasticsearchPersistence) {
-        this.databasePersistence = databasePersistence;
-        this.elasticsearchPersistence = elasticsearchPersistence;
+    public CompositeStorage(DatabaseStorage databaseStorage,
+                            ElasticsearchStorage elasticsearchStorage) {
+        this.databaseStorage = databaseStorage;
+        this.elasticsearchStorage = elasticsearchStorage;
     }
 
     @Override
     public void save(@Nonnull final Department department) {
         try {
-            databasePersistence.save(department);
-            elasticsearchPersistence.save(department);
+            databaseStorage.save(department);
+            elasticsearchStorage.save(department);
         } catch (RuntimeException e) {
             remove(department, e);
             throw e;
@@ -35,8 +35,8 @@ public class CompositeStorage implements Organization.Storage {
 
     @Override
     public void remove(@Nonnull Department department, Exception e) {
-        databasePersistence.remove(department, e);
-        elasticsearchPersistence.remove(department, e);
+        databaseStorage.remove(department, e);
+        elasticsearchStorage.remove(department, e);
 
         log.error("持久化错误! \n部门: " + department.getName()
                         + "[" + department.getId() + "], 员工数: " + department.getEmployees().size()

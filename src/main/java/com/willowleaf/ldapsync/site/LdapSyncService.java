@@ -1,8 +1,8 @@
 package com.willowleaf.ldapsync.site;
 
 import com.willowleaf.ldapsync.domain.LdapPorter;
-import com.willowleaf.ldapsync.domain.factory.LdapPorterFactory;
 import com.willowleaf.ldapsync.domain.Organization;
+import com.willowleaf.ldapsync.domain.factory.LdapPorterFactory;
 import org.springframework.stereotype.Service;
 
 @Service

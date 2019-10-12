@@ -27,10 +27,10 @@ import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 public class ElasticsearchStorage implements Organization.Storage {
 
     // Elasticsearch 6.X一个index只能有一个type，7+以后会取消type，所有当前版本使用固定的type值
-    private static final String TYPE = "doc";
+    private final String type = "doc";
 
-    private static final String INDEX_PREFIX_DEPT = "dept";
-    private static final String INDEX_PREFIX_EMP = "emp";
+    private String deptIndex;
+    private String empIndex;
 
     private final RestHighLevelClient client;
 
@@ -48,17 +48,20 @@ public class ElasticsearchStorage implements Organization.Storage {
     @SneakyThrows
     @Override
     public void remove(@Nonnull Department department, Exception e) {
-        client.delete(new DeleteRequest(getDeptIndex(department.getDataSource()), TYPE, department.getNumber()), DEFAULT);
+        client.delete(new DeleteRequest(getDeptIndex(department.getDataSource()),
+                type, department.getNumber()), DEFAULT);
         BulkRequest bulkRequest = new BulkRequest();
         for (Employee employee : department.getEmployees()) {
-            DeleteRequest deleteRequest = new DeleteRequest(getEmpIndex(employee.getDataSource()), TYPE, employee.getUid());
+            DeleteRequest deleteRequest = new DeleteRequest(
+                    getEmpIndex(employee.getDataSource()), type, employee.getUid());
             bulkRequest.add(deleteRequest);
         }
         client.bulk(bulkRequest, DEFAULT);
     }
 
     private void saveDepartment(Department department) throws IOException {
-        client.update(buildRequest(getDeptIndex(department.getDataSource()), department.getNumber(), department), DEFAULT);
+        client.update(buildRequest(getDeptIndex(department.getDataSource()),
+                department.getNumber(), department), DEFAULT);
     }
 
     private void saveEmployees(List<Employee> employees) throws IOException {
@@ -68,57 +71,56 @@ public class ElasticsearchStorage implements Organization.Storage {
 
         BulkRequest bulkRequest = new BulkRequest();
         String empIndex = getEmpIndex(employees.get(0).getDataSource());
-        for (Employee employee : employees) {   // add方法是线程不安全的，不能使用并发流
-            bulkRequest.add(buildRequest(empIndex, employee.getUid(), employee));
+        for (Employee employee : employees) {
+            bulkRequest.add(buildRequest(empIndex, employee.getUid(), employee));   // add方法是线程不安全的
         }
         client.bulk(bulkRequest, DEFAULT);
     }
 
-    private static String getIndex(String indexPrefix, DataSource dataSource) {
-        return indexPrefix + "_" + dataSource.getId();
+    private String getDeptIndex(@Nonnull DataSource dataSource) {
+        if (deptIndex == null) {
+            deptIndex = getIndex("dept", dataSource);
+        }
+        return deptIndex;
+    }
+
+    private String getEmpIndex(@Nonnull DataSource dataSource) {
+        if (empIndex == null) {
+            empIndex = getIndex("emp", dataSource);
+        }
+        return empIndex;
     }
 
     /**
-     * index的格式为dept_{dataSourceId}。
+     * index的格式为{prefix}_{dataSourceId}。
      */
-    private static String getDeptIndex(@Nonnull DataSource dataSource) {
-        return getIndex(INDEX_PREFIX_DEPT, dataSource);
+    private String getIndex(String prefix, DataSource dataSource) {
+        return prefix + "_" + dataSource.getId();
     }
 
-    /**
-     * index的格式为emp_{dataSourceId}。
-     */
-    private static String getEmpIndex(@Nonnull DataSource dataSource) {
-        return getIndex(INDEX_PREFIX_EMP, dataSource);
-    }
-
-    private UpdateRequest buildRequest(String index, String id, Object model) throws IOException {
+    private UpdateRequest buildRequest(String index, String id, Object model) {
         XContentBuilder document = buildDocument(model);
 
-        IndexRequest indexRequest = new IndexRequest(index, TYPE, id).source(document);
-        return new UpdateRequest(index, TYPE, id)
+        IndexRequest indexRequest = new IndexRequest(index, type, id).source(document);
+        return new UpdateRequest(index, type, id)
                 .doc(document)
                 .upsert(indexRequest);  // upsert: insert or update
     }
 
-    private XContentBuilder buildDocument(Object object) throws IOException {
+    @SneakyThrows
+    private XContentBuilder buildDocument(Object object) {
         XContentBuilder builder = jsonBuilder().startObject();
 
-        Class clazz = object.getClass();
+        Class<?> clazz = object.getClass();
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
             if (isPersisted(field)) {
                 field.setAccessible(true);
-                try {
-                    builder.field(field.getName(), field.get(object));
-                } catch (IllegalAccessException ignored) {
-                    // It won't happen.
-                }
+                builder.field(field.getName(), field.get(object));
             }
         }
 
-        builder.endObject();
-        return builder;
+        return builder.endObject();
     }
 
     /**
