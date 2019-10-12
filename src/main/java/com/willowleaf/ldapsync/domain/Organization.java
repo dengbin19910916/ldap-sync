@@ -174,13 +174,12 @@ public class Organization {
      * 设置部门的idPath，numberPath和namePath。
      */
     private void setPath() {
-        departments = departments.parallelStream()
-                .peek(department -> {
+        departments.parallelStream()
+                .forEach(department -> {
                     department.getIdPath();
                     department.getNumberPath();
                     department.getNamePath();
-                })
-                .collect(toList());
+                });
     }
 
     @Override
