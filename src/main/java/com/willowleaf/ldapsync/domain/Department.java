@@ -43,7 +43,7 @@ public class Department {
      */
     @JsonIgnore
     @Transient
-    private List<Department> children = new CopyOnWriteArrayList<>();
+    private List<Department> children = new ArrayList<>();
     /**
      * 部门路径（包含当前部门）。
      */

@@ -3,7 +3,6 @@ package com.willowleaf.ldapsync.domain;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import reactor.core.publisher.Flux;
-import reactor.core.scheduler.Schedulers;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -108,17 +107,14 @@ public class Organization {
         Map<String, List<Department>> departmentMap = departments.parallelStream()
                 .collect(groupingBy(Department::getNumber));
 
-        buildDepartmentTree(departmentMap);
-
         Thread calcRelationTask = new Thread(() -> calcRelation(departmentMap));
         calcRelationTask.start();
+        buildDepartmentTree(departmentMap);
         calcRelationTask.join();
     }
 
     private void buildDepartmentTree(Map<String, List<Department>> departmentMap) {
         Flux.fromIterable(departments)
-                .parallel()
-                .runOn(Schedulers.parallel())
                 .subscribe(
                         department -> {
                             String departmentParentNumber = department.getParentNumber();
