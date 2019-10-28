@@ -8,8 +8,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 /**
@@ -104,8 +103,8 @@ public class Organization {
 
     @SneakyThrows
     private void init() {
-        Map<String, List<Department>> departmentMap = departments.parallelStream()
-                .collect(groupingBy(Department::getNumber));
+        Map<String, Department> departmentMap = departments.parallelStream()
+                .collect(toMap(Department::getNumber, department -> department));
 
         Thread calcRelationTask = new Thread(() -> calcRelation(departmentMap));
         calcRelationTask.start();
@@ -113,13 +112,13 @@ public class Organization {
         calcRelationTask.join();
     }
 
-    private void buildDepartmentTree(Map<String, List<Department>> departmentMap) {
+    private void buildDepartmentTree(Map<String, Department> departmentMap) {
         Flux.fromIterable(departments)
                 .subscribe(
                         department -> {
                             String departmentParentNumber = department.getParentNumber();
                             if (departmentParentNumber != null) {
-                                Department parent = departmentMap.get(departmentParentNumber).get(0);
+                                Department parent = departmentMap.get(departmentParentNumber);
                                 if (parent != null) {
                                     department.setParent(parent);
                                     parent.getChildren().add(department);
@@ -136,9 +135,9 @@ public class Organization {
     /**
      * 计算员工与部门、岗位之间的关系。
      */
-    private void calcRelation(Map<String, List<Department>> departmentMap) {
-        Map<String, List<Position>> positionMap = positions.parallelStream()
-                .collect(groupingBy(Position::getNumber));
+    private void calcRelation(Map<String, Department> departmentMap) {
+        Map<String, Position> positionMap = positions.parallelStream()
+                .collect(toMap(Position::getNumber, position -> position));
 
         employees = employees.parallelStream()
                 .filter(employee -> employee.getDepartmentNumber() != null
@@ -147,7 +146,7 @@ public class Organization {
                     if (employee.getDepartment() == null) {
                         String departmentNumber = employee.getDepartmentNumber();
                         if (departmentNumber != null) {
-                            Department department = departmentMap.get(departmentNumber).get(0);
+                            Department department = departmentMap.get(departmentNumber);
                             employee.setDepartment(department);
                             department.getEmployees().add(employee);
                         }
@@ -155,7 +154,7 @@ public class Organization {
 
                     String positionNumber = employee.getPositionNumber();
                     if (positionNumber != null) {
-                        Position position = positionMap.get(positionNumber).get(0);
+                        Position position = positionMap.get(positionNumber);
                         employee.getPositions().add(position);
                         employee.setPositionName(position == null ? null : position.getName());
                         if (position != null) {
