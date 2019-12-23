@@ -26,7 +26,7 @@
         <fastjson.version>1.2.62</fastjson.version>
         <reactor-core.version>3.3.0.RELEASE</reactor-core.version>
         <jsr305.version>3.0.2</jsr305.version>
-        <curator-recipes.version>4.2.0</curator-recipes.version><!--Zookeeper 3.5.X-->
+        <curator-recipes.version>4.2.0</curator-recipes.version><!-- Zookeeper 3.5+ -->
     </properties>
 
     <dependencies>
