@@ -2,13 +2,13 @@ package com.willowleaf.ldapsync.domain;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
-import reactor.core.publisher.Flux;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 /**
@@ -113,23 +113,17 @@ public class Organization {
     }
 
     private void buildDepartmentTree(Map<String, Department> departmentMap) {
-        Flux.fromIterable(departments)
-                .subscribe(
-                        department -> {
-                            String departmentParentNumber = department.getParentNumber();
-                            if (departmentParentNumber != null) {
-                                Department parent = departmentMap.get(departmentParentNumber);
-                                if (parent != null) {
-                                    department.setParent(parent);
-                                    parent.getChildren().add(department);
-                                }
-                            }
-                        },
-                        error -> {
-                            throw new RuntimeException("部门树节点生产失败");
-                        },
-                        this::setPath
-                );
+        departments.parallelStream().forEach(department -> {
+            String departmentParentNumber = department.getParentNumber();
+            if (departmentParentNumber != null) {
+                Department parent = departmentMap.get(departmentParentNumber);
+                if (parent != null) {
+                    department.setParent(parent);
+                    parent.getChildren().add(department);
+                }
+            }
+        });
+        setPath();
     }
 
     /**
@@ -139,10 +133,10 @@ public class Organization {
         Map<String, Position> positionMap = positions.parallelStream()
                 .collect(toMap(Position::getNumber, position -> position));
 
-        employees = employees.parallelStream()
+        employees.parallelStream()
                 .filter(employee -> employee.getDepartmentNumber() != null
                         && departmentMap.containsKey(employee.getDepartmentNumber()))  // 过滤掉没有部门的员工
-                .peek(employee -> {
+                .forEach(employee -> {
                     if (employee.getDepartment() == null) {
                         String departmentNumber = employee.getDepartmentNumber();
                         if (departmentNumber != null) {
@@ -161,8 +155,7 @@ public class Organization {
                             position.getEmployees().add(employee);
                         }
                     }
-                })
-                .collect(toList());
+                });
     }
 
     /**
