@@ -1,5 +1,6 @@
 package com.willowleaf.ldapsync.domain.persistence;
 
+import com.willowleaf.ldapsync.annotation.Ignore;
 import com.willowleaf.ldapsync.domain.DataSource;
 import com.willowleaf.ldapsync.domain.Department;
 import com.willowleaf.ldapsync.domain.Employee;
@@ -26,9 +27,6 @@ import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 @Component
 public class ElasticsearchStorage implements Organization.Storage {
 
-    // Elasticsearch 6.X一个index只能有一个type，7+以后会取消type，所有当前版本使用固定的type值
-    private final String type = "doc";
-
     private String deptIndex;
     private String empIndex;
 
@@ -48,12 +46,11 @@ public class ElasticsearchStorage implements Organization.Storage {
     @SneakyThrows
     @Override
     public void remove(@Nonnull Department department, Exception e) {
-        client.delete(new DeleteRequest(getDeptIndex(department.getDataSource()),
-                type, department.getNumber()), DEFAULT);
+        client.delete(new DeleteRequest(getDeptIndex(department.getDataSource())).id(department.getNumber()), DEFAULT);
         BulkRequest bulkRequest = new BulkRequest();
         for (Employee employee : department.getEmployees()) {
-            DeleteRequest deleteRequest = new DeleteRequest(
-                    getEmpIndex(employee.getDataSource()), type, employee.getUid());
+            DeleteRequest deleteRequest = new DeleteRequest(getEmpIndex(employee.getDataSource()))
+                    .id(employee.getUid());
             bulkRequest.add(deleteRequest);
         }
         client.bulk(bulkRequest, DEFAULT);
@@ -101,8 +98,10 @@ public class ElasticsearchStorage implements Organization.Storage {
     private UpdateRequest buildRequest(String index, String id, Object model) {
         XContentBuilder document = buildDocument(model);
 
-        IndexRequest indexRequest = new IndexRequest(index, type, id).source(document);
-        return new UpdateRequest(index, type, id)
+        IndexRequest indexRequest = new IndexRequest(index).id(id).source(document);
+        return new UpdateRequest()
+                .id(id)
+                .index(index)
                 .doc(document)
                 .upsert(indexRequest);  // upsert: insert or update
     }
@@ -130,9 +129,7 @@ public class ElasticsearchStorage implements Organization.Storage {
      * @return 需要持久化字段的类型
      */
     private boolean isPersisted(Field field) {
-        Class<?> type = field.getType();
-        return type == String.class
-                || type == Integer.class
-                || type == Long.class;
+        Ignore annotation = field.getDeclaredAnnotation(Ignore.class);
+        return annotation == null;
     }
 }

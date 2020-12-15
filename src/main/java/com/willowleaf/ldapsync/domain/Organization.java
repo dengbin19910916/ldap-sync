@@ -20,13 +20,13 @@ public class Organization {
      * 组织信息所属的数据源。
      */
     @Getter
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     /**
      * 所有部门。
      */
     @Getter
-    private List<Department> departments;
+    private final List<Department> departments;
 
     /**
      * 所有员工。
@@ -38,9 +38,9 @@ public class Organization {
      * 所有岗位。
      */
     @Getter
-    private List<Position> positions;
+    private final List<Position> positions;
 
-    private Storage storage;
+    private final Storage storage;
 
     /**
      * 创建组织架构。

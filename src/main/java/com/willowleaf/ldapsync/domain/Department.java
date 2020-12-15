@@ -1,6 +1,7 @@
 package com.willowleaf.ldapsync.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.willowleaf.ldapsync.annotation.Ignore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -37,18 +38,21 @@ public class Department {
      */
     @JsonIgnore
     @Transient
+    @Ignore
     private Department parent;
     /**
      * 子部门列表。
      */
     @JsonIgnore
     @Transient
+    @Ignore
     private List<Department> children = new ArrayList<>();
     /**
      * 部门路径（包含当前部门）。
      */
     @JsonIgnore
     @Transient
+    @Ignore
     private List<Department> path;
     /**
      * 部门编号（必须），例如：30003397（LDAP的唯一标识）。
@@ -104,11 +108,13 @@ public class Department {
      * 员工列表。
      */
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
+    @Ignore
     private List<Employee> employees = new CopyOnWriteArrayList<>();
     /**
      * 数据源。
      */
     @ManyToOne
+    @Ignore
     private DataSource dataSource;
 
     /**

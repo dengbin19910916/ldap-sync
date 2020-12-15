@@ -1,5 +1,6 @@
 package com.willowleaf.ldapsync.domain;
 
+import com.willowleaf.ldapsync.annotation.Ignore;
 import lombok.Data;
 
 import java.util.List;
@@ -27,9 +28,11 @@ public class Position {
     /**
      * 数据源。
      */
+    @Ignore
     private DataSource dataSource;
     /**
      * 岗位的员工列表。
      */
+    @Ignore
     private List<Employee> employees = new CopyOnWriteArrayList<>();
 }

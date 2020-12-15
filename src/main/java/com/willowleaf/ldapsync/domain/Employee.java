@@ -1,5 +1,6 @@
 package com.willowleaf.ldapsync.domain;
 
+import com.willowleaf.ldapsync.annotation.Ignore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -129,16 +130,19 @@ public class Employee {
      * 员工所属部门。
      */
     @ManyToOne
+    @Ignore
     private Department department;
     /**
      * 员工的岗位列表。
      */
     @Transient
+    @Ignore
     private List<Position> positions = new CopyOnWriteArrayList<>();
     /**
      * 数据源。
      */
     @ManyToOne
+    @Ignore
     private DataSource dataSource;
 
     @Override
