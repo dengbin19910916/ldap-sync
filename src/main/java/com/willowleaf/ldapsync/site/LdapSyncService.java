@@ -14,7 +14,7 @@ public class LdapSyncService {
         this.ldapPorterFactory = ldapPorterFactory;
     }
 
-    void syncData(Integer dataSourceId) {
+    public void syncData(Integer dataSourceId) {
         LdapPorter porter = ldapPorterFactory.getLdapPorter(dataSourceId);
 
         // 1. 拉取数据并将其转换为标准的组织信息

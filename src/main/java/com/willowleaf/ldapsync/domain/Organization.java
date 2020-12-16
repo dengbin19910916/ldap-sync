@@ -32,7 +32,7 @@ public class Organization {
      * 所有员工。
      */
     @Getter
-    private List<Employee> employees;
+    private final List<Employee> employees;
 
     /**
      * 所有岗位。

@@ -41,7 +41,7 @@ public class LdapPorterFactory {
             case CYCLE:
                 return new CycleLdapPorter(dataSource, storage);
             default:
-                throw new RuntimeException(String.format("Datasource [%s] not exists.", dataSourceId));
+                throw new RuntimeException(String.format("数据源[%s]不存在", dataSourceId));
         }
     }
 

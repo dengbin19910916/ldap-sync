@@ -23,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 public class LdapSyncStopwatch {
 
     private final static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final static ZoneOffset ZONE_OFFSET = OffsetDateTime.now().getOffset();
     private final LdapPorterFactory ldapPorterFactory;
 
     public LdapSyncStopwatch(LdapPorterFactory ldapPorterFactory) {
@@ -38,15 +39,13 @@ public class LdapSyncStopwatch {
         Integer dataSourceId = (Integer) joinPoint.getArgs()[0];
         LdapPorter porter = ldapPorterFactory.getLdapPorter(dataSourceId);
 
-        ZoneOffset zoneOffset = OffsetDateTime.now().getOffset();
         LocalDateTime start = LocalDateTime.now();
-
         log.info("{}数据同步开始[{}]", porter.getDataSource().getName(), start.format(FORMATTER));
         Object result = joinPoint.proceed();
         log.info("{}数据同步结束[{}], 共耗时: {}s",
                 porter.getDataSource().getName(),
                 LocalDateTime.now().format(FORMATTER),
-                LocalDateTime.now().toEpochSecond(zoneOffset) - start.toEpochSecond(zoneOffset));
+                LocalDateTime.now().toEpochSecond(ZONE_OFFSET) - start.toEpochSecond(ZONE_OFFSET));
         return result;
     }
 }
