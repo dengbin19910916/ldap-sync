@@ -1,11 +1,10 @@
-package com.willowleaf.ldapsync.site;
+package com.willowleaf.ldapsync.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Data
-@Component
 @ConfigurationProperties(prefix = "zookeeper")
 public class ZookeeperProperties {
 
