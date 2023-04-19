@@ -53,6 +53,9 @@ public class DataSource {
 
     private String password;
 
+    @Transient
+    private LdapOperations ldapOperations;
+
     @Enumerated
     private PullStrategy pullStrategy;
 
@@ -116,7 +119,7 @@ public class DataSource {
                     try {
                         model = clazz.getDeclaredConstructor().newInstance();
                     } catch (InstantiationException | IllegalAccessException
-                            | NoSuchMethodException | InvocationTargetException e) {
+                             | NoSuchMethodException | InvocationTargetException e) {
                         throw new RuntimeException(e);  // It won't happen.
                     }
                     BeanWrapper beanWrapper = new BeanWrapperImpl(model);
@@ -177,7 +180,10 @@ public class DataSource {
                 return password;
             }
         });
-        return new LdapTemplate(contextSource);
+        if (ldapOperations == null) {
+            this.ldapOperations = new LdapTemplate(contextSource);
+        }
+        return ldapOperations;
     }
 
     @JsonIgnore

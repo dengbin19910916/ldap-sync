@@ -139,11 +139,9 @@ public class Organization {
                 .forEach(employee -> {
                     if (employee.getDepartment() == null) {
                         String departmentNumber = employee.getDepartmentNumber();
-                        if (departmentNumber != null) {
-                            Department department = departmentMap.get(departmentNumber);
-                            employee.setDepartment(department);
-                            department.getEmployees().add(employee);
-                        }
+                        Department department = departmentMap.get(departmentNumber);
+                        employee.setDepartment(department);
+                        department.getEmployees().add(employee);
                     }
 
                     String positionNumber = employee.getPositionNumber();

@@ -1,14 +1,14 @@
 package com.willowleaf.ldapsync;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.RecursiveAction;
 import java.util.concurrent.RecursiveTask;
 
-//@RunWith(SpringRunner.class)
-//@SpringBootTest
+@SpringBootTest
 public class LdapSyncApplicationTests {
 
     @Test

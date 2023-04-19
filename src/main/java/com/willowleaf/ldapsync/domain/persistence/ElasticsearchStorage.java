@@ -108,18 +108,19 @@ public class ElasticsearchStorage implements Organization.Storage {
 
     @SneakyThrows
     private XContentBuilder buildDocument(Object object) {
-        XContentBuilder builder = jsonBuilder().startObject();
-
-        Class<?> clazz = object.getClass();
-        Field[] fields = clazz.getDeclaredFields();
-        for (Field field : fields) {
-            if (isPersisted(field)) {
-                field.setAccessible(true);
-                builder.field(field.getName(), field.get(object));
+        try (XContentBuilder builder = jsonBuilder()) {
+            builder.startObject();
+            Class<?> clazz = object.getClass();
+            Field[] fields = clazz.getDeclaredFields();
+            for (Field field : fields) {
+                if (isPersisted(field)) {
+                    field.setAccessible(true);
+                    builder.field(field.getName(), field.get(object));
+                }
             }
-        }
 
-        return builder.endObject();
+            return builder.endObject();
+        }
     }
 
     /**

@@ -27,7 +27,7 @@ public class CompositeStorage implements Organization.Storage {
         try {
             databaseStorage.save(department);
             elasticsearchStorage.save(department);
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             remove(department, e);
             throw e;
         }
