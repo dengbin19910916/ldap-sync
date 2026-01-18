@@ -41,44 +41,23 @@ public abstract class LdapPorter {
      * @see Employee
      * @see Position
      */
-    protected <T> List<T> pullElements(Dictionary dictionary, Class<T> clazz) {
+    protected <T> List<T> pullElements(@Nonnull Dictionary dictionary, Class<T> clazz) {
         return getElements(
                 dataSource.search(dictionary.getBase(), dictionary.getFilter(),
-                        dictionary.getAttributeMaps(), clazz)
+                                dictionary.getAttributeMaps(), clazz)
                         .parallelStream(),
                 clazz);
     }
 
-    /**
-     * 返回员工数据集合。
-     *
-     * @see Employee
-     */
-    protected List<Employee> pullEmployeeElements(Dictionary dictionary, String name, String value) {
-        Class<Employee> employeeClass = Employee.class;
-        return getElements(
-                dataSource.search(dictionary.getBase(), andFilter(dictionary.getFilter(), name, value),
-                        dictionary.getAttributeMaps(), employeeClass)
-                        .stream(),
-                employeeClass);
-    }
-
-    /**
-     * 返回一个完整的LDAP查询语句，使用 & 连接已有的filter和name=value。
-     */
-    private String andFilter(@Nonnull String filter, @Nonnull String name, @Nonnull String value) {
-        return "(&" + filter + "(" + name + "=" + value + "))";
-    }
-
-    private <T> List<T> getElements(Stream<T> stream, Class<?> clazz) {
+    protected <T> List<T> getElements(@Nonnull Stream<T> stream, Class<?> clazz) {
         return stream
                 .peek(element -> {
                     try {
                         clazz.getDeclaredMethod("setDataSource", DataSource.class)
                                 .invoke(element, dataSource);
                     } catch (IllegalAccessException
-                            | InvocationTargetException
-                            | NoSuchMethodException ignored) {
+                             | InvocationTargetException
+                             | NoSuchMethodException ignored) {
                     }
                 })
                 .collect(toList());

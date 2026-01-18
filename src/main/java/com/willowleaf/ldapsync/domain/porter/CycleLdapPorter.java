@@ -53,4 +53,25 @@ public class CycleLdapPorter extends LdapPorter {
         return new Organization(dataSource, departments, positions, storage);
     }
 
+    /**
+     * 返回员工数据集合。
+     *
+     * @see Employee
+     */
+    protected List<Employee> pullEmployeeElements(@Nonnull Dictionary dictionary, String name, String value) {
+        Class<Employee> employeeClass = Employee.class;
+        return getElements(
+                dataSource.search(dictionary.getBase(), andFilter(dictionary.getFilter(), name, value),
+                                dictionary.getAttributeMaps(), employeeClass)
+                        .stream(),
+                employeeClass);
+    }
+
+    /**
+     * 返回一个完整的LDAP查询语句，使用 & 连接已有的filter和name=value。
+     */
+    @Nonnull
+    private String andFilter(@Nonnull String filter, @Nonnull String name, @Nonnull String value) {
+        return "(&" + filter + "(" + name + "=" + value + "))";
+    }
 }

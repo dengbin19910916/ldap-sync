@@ -109,9 +109,9 @@ public class DataSource {
      * @param <T>           结果数据类型
      * @return 数据列表
      */
-    <T> List<T> search(@Nonnull String base, @Nonnull String filter,
-                       @Nonnull List<AttributeMap> attributeMaps,
-                       @Nonnull Class<T> clazz) {
+    public <T> List<T> search(@Nonnull String base, @Nonnull String filter,
+                              @Nonnull List<AttributeMap> attributeMaps,
+                              @Nonnull Class<T> clazz) {
         return getLdapOperations().search(base, filter, SUBTREE_SCOPE,
                 attributeMaps.stream().map(AttributeMap::getSourceName).toArray(String[]::new),
                 (AttributesMapper<T>) attributes -> {

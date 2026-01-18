@@ -61,7 +61,7 @@ public class ElasticsearchStorage implements Organization.Storage {
                 department.getNumber(), department), DEFAULT);
     }
 
-    private void saveEmployees(List<Employee> employees) throws IOException {
+    private void saveEmployees(@Nonnull List<Employee> employees) throws IOException {
         if (employees.isEmpty()) {
             return;
         }
@@ -91,7 +91,8 @@ public class ElasticsearchStorage implements Organization.Storage {
     /**
      * index的格式为{prefix}_{dataSourceId}。
      */
-    private String getIndex(String prefix, DataSource dataSource) {
+    @Nonnull
+    private String getIndex(String prefix, @Nonnull DataSource dataSource) {
         return prefix + "_" + dataSource.getId();
     }
 
@@ -106,8 +107,9 @@ public class ElasticsearchStorage implements Organization.Storage {
                 .upsert(indexRequest);  // upsert: insert or update
     }
 
+    @Nonnull
     @SneakyThrows
-    private XContentBuilder buildDocument(Object object) {
+    private XContentBuilder buildDocument(@Nonnull Object object) {
         try (XContentBuilder builder = jsonBuilder()) {
             builder.startObject();
             Class<?> clazz = object.getClass();
@@ -129,7 +131,7 @@ public class ElasticsearchStorage implements Organization.Storage {
      * @param field 数据对象的字段
      * @return 需要持久化字段的类型
      */
-    private boolean isPersisted(Field field) {
+    private boolean isPersisted(@Nonnull Field field) {
         Ignore annotation = field.getDeclaredAnnotation(Ignore.class);
         return annotation == null;
     }
