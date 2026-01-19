@@ -149,7 +149,7 @@ public class DataSource {
                     break;
                 } catch (DateTimeParseException e) {
                     if (i == formatters.length - 1) {   // 未找到合适的日期格式
-                        log.error("日期格式不合法[{}]，请添加合适的日期格式配置。", value.toString());
+                        log.error("日期格式不合法[{}]，请添加合适的日期格式配置。", value);
                         throw e;
                     }
                 }

@@ -38,10 +38,8 @@ public class CompositeStorage implements Organization.Storage {
         databaseStorage.remove(department, e);
         elasticsearchStorage.remove(department, e);
 
-        log.error("持久化错误! \n部门: " + department.getName()
-                        + "[" + department.getId() + "], 员工数: " + department.getEmployees().size()
-                        + ", \n员工列表: " + department.getEmployees().stream()
-                        .map(employee -> employee.getName() + "[" + employee.getId() + "]").collect(toList()),
-                e);
+        log.error("持久化错误! \n部门: {}[{}], 员工数: {}, \n员工列表: {}", department.getName(),
+                department.getId(), department.getEmployees().size(), department.getEmployees().stream()
+                .map(employee -> employee.getName() + "[" + employee.getId() + "]").collect(toList()), e);
     }
 }
