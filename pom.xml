@@ -23,7 +23,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>11</java.version>
 
-        <fastjson.version>1.2.75</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <jsr305.version>3.0.2</jsr305.version>
         <curator-recipes.version>5.1.0</curator-recipes.version><!-- Zookeeper 3.5+ -->
     </properties>
